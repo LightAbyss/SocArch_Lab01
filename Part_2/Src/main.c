@@ -169,33 +169,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin); 
     }
 }
-
+/* IMPORTANT NOTE: The clk freq of the timer is 84 MHz */
 /** 
 * @brief EXTI line detection callbacks. 
-* @details Toggle the LED4 each time the callback for the B1_Pin (blue button) is 
-received. 
+* @details Change the timer configuration to trigger an interrupt after 1, 2 or 10 seconds.
 * @param GPIO_Pin Specifies the pins connected EXTI line 
 * @retval None 
 */ 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ 
   if(GPIO_Pin == B1_Pin){ 
     HAL_TIM_Base_Stop_IT(&htim10); //Stop timer
-    time_selector = (time_selector!=2) ? time_selector+1 : 0; //Update time selector
+    time_selector = (time_selector!=2) ? time_selector + 1 : 0; //Update time selector
     switch (time_selector){
       case 0:
-        __HAL_TIM_SET_AUTORELOAD(&htim10, 267); //Set timer to 1s
+        __HAL_TIM_SET_AUTORELOAD(&htim10, 1292); //Set timer to 1s
       break;
 
       case 1:
-        __HAL_TIM_SET_AUTORELOAD(&htim10, 534); //Set timer to 2s
+        __HAL_TIM_SET_AUTORELOAD(&htim10, 2584); //Set timer to 2s
       break;
 
       case 2:
-        __HAL_TIM_SET_AUTORELOAD(&htim10, 2670); //Set timer to 10s
+        __HAL_TIM_SET_AUTORELOAD(&htim10, 12920); //Set timer to 10s
       break;
       
       default:
-        __HAL_TIM_SET_AUTORELOAD(&htim10, 267); //Set timer to 1s
+        __HAL_TIM_SET_AUTORELOAD(&htim10, 1297); //Set timer to 1s
         time_selector = 0;
       break;
     }
